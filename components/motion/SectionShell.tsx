@@ -9,6 +9,8 @@ const tones = {
   "cream-2": "bg-cream-2 text-ink",
   forest: "bg-forest text-cream",
   pink: "bg-pink text-white",
+  /** cream on md+, forest on phones: used under the dark rail so no cream sliver shows between sections */
+  rail: "bg-forest text-ink md:bg-cream",
 };
 
 /**
@@ -37,10 +39,11 @@ export function SectionShell({
 }) {
   const ref = useGsap<HTMLDivElement>(({ gsap, root, reduced }) => {
     if (reduced) return;
+    const phone = window.matchMedia("(max-width: 767px)").matches;
     gsap.fromTo(
       root,
-      { borderTopLeftRadius: "6rem", borderTopRightRadius: "6rem" },
-      { borderTopLeftRadius: "2.5rem", borderTopRightRadius: "2.5rem", ease: "none", scrollTrigger: { trigger: root, start: "top bottom", end: "top 35%", scrub: true } },
+      { borderTopLeftRadius: phone ? "3rem" : "6rem", borderTopRightRadius: phone ? "3rem" : "6rem" },
+      { borderTopLeftRadius: phone ? "1.75rem" : "2.5rem", borderTopRightRadius: phone ? "1.75rem" : "2.5rem", ease: "none", scrollTrigger: { trigger: root, start: "top bottom", end: "top 35%", scrub: true } },
     );
     if (!pinned) {
       gsap.fromTo(root.firstElementChild, { y: 70 }, { y: 0, ease: "none", scrollTrigger: { trigger: root, start: "top bottom", end: "top 30%", scrub: true } });
@@ -50,7 +53,7 @@ export function SectionShell({
     <div
       ref={ref}
       id={id}
-      className={cn("relative overflow-x-clip rounded-t-[2.5rem] shadow-[0_-26px_60px_rgba(1,50,21,.14)]", overlap && "-mt-10 md:-mt-14", tones[tone], className)}
+      className={cn("relative overflow-x-clip rounded-t-[1.75rem] shadow-[0_-26px_60px_rgba(1,50,21,.14)] md:rounded-t-[2.5rem]", overlap && "-mt-10 md:-mt-14", tones[tone], className)}
       style={{ zIndex: 10 + i }}
     >
       <div>{children}</div>

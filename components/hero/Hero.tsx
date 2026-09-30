@@ -81,15 +81,15 @@ export function Hero() {
       </div>
 
       <div className="container-x relative flex flex-1 flex-col">
-        <div className="relative flex min-h-[58svh] flex-1 items-center justify-center md:min-h-0">
-          <div data-orbit className="pointer-events-none absolute left-1/2 top-[52%] h-[40vh] w-[110vw] max-w-[104rem] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] md:h-[72vh]" aria-hidden>
+        <div className="relative flex min-h-[52svh] flex-1 items-center justify-center md:min-h-0">
+          <div data-orbit className="pointer-events-none absolute left-1/2 top-[54%] h-[34vh] w-[100vw] max-w-[104rem] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] md:top-[52%] md:h-[72vh] md:w-[110vw]" aria-hidden>
             {packs.map((p, i) => {
               const a = -Math.PI / 2 + (i / packs.length) * Math.PI * 2;
               return (
                 <div
                   key={p.slug}
                   data-pack
-                  className="absolute w-[9.5vw] min-w-[80px] max-w-[150px] -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                  className="absolute w-[9.5vw] min-w-[72px] max-w-[150px] -translate-x-1/2 -translate-y-1/2 will-change-transform md:min-w-[80px]"
                   style={{ ...skuVars(p.accent, p.ink, p.soft), left: `${50 + Math.cos(a) * 50}%`, top: `${50 + Math.sin(a) * 50}%` }}
                 >
                   <Image src={p.image} alt="" width={150} height={240} priority className="pack-shadow w-full" />
@@ -135,7 +135,7 @@ export function Hero() {
         </div>
 
         {/* bottom row: scroll cue left, CTAs right. Nothing else. */}
-        <div className="relative z-20 flex flex-col gap-5 pb-10 pt-4 md:flex-row md:items-end md:justify-between md:pb-12">
+        <div className="relative z-20 flex flex-col gap-5 pb-24 pt-4 md:flex-row md:items-end md:justify-between md:pb-12">
           <div data-fade className="hidden md:block">
             <Magnetic>
               <button onClick={() => scrollTo("#shelves", -80)} className="pill flex items-center gap-2 border border-forest/20 bg-cream/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] backdrop-blur-md transition-colors hover:bg-forest hover:text-cream">
@@ -148,7 +148,7 @@ export function Hero() {
           </div>
 
           <div data-fade className="flex flex-col gap-4 md:items-end">
-            <div className="flex flex-wrap items-center gap-3 md:justify-end">
+            <div className="grid grid-cols-1 gap-3 [&>span]:block [&_a]:w-full [&_a]:justify-center md:flex md:flex-wrap md:items-center md:justify-end md:[&>span]:inline-block md:[&_a]:w-auto">
               <Button href={site.hero.primary.href} size="lg">
                 {site.hero.primary.label} <Arrow />
               </Button>
@@ -156,7 +156,7 @@ export function Hero() {
                 {site.hero.secondary.label}
               </Button>
             </div>
-            <div className="flex flex-wrap gap-2 md:hidden">
+            <div className="flex flex-wrap justify-center gap-2 md:hidden">
               <Sticker tone="pink" rotate={-3} icon="no-palm">
                 {site.hero.stickers[0]}
               </Sticker>

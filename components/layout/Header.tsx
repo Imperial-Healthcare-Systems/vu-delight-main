@@ -34,7 +34,7 @@ export function Header() {
     <>
       <header className="fixed inset-x-0 top-0 z-[60]">
         <div className={cn("overflow-hidden bg-forest text-cream transition-[max-height,opacity] duration-500 ease-[var(--ease-out-expo)]", scrolled ? "max-h-0 opacity-0" : "max-h-8 opacity-100")}>
-          <Marquee speed={40} skew={false} className="h-8 text-[0.68rem] font-semibold uppercase tracking-[0.18em]">
+          <Marquee speed={40} skew={false} className="h-8 text-[0.72rem] font-semibold uppercase tracking-[0.18em] md:text-[0.68rem]">
             {site.announcements.map((a, i) => (
               <span key={a} className="flex items-center gap-8 pl-4 pr-4 leading-8">
                 {a} <span className={cn("h-1 w-1 rounded-full", i % 2 ? "bg-pink" : "bg-tangerine")} />
@@ -71,7 +71,7 @@ export function Header() {
             </nav>
 
             <div className="flex items-center gap-1.5">
-              <button onClick={() => setSearch(true)} className="pill grid h-10 w-10 place-items-center transition-colors hover:bg-forest hover:text-cream" aria-label="Search">
+              <button onClick={() => setSearch(true)} className="pill grid h-11 w-11 place-items-center transition-colors hover:bg-forest hover:text-cream md:h-10 md:w-10" aria-label="Search">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
                   <circle cx="11" cy="11" r="6.5" />
                   <path d="m20 20-4.2-4.2" />
@@ -85,7 +85,7 @@ export function Header() {
               </button>
               <button
                 onClick={() => setCart(true)}
-                className="pill relative flex items-center gap-2 bg-forest px-3.5 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-pink sm:px-4"
+                className="pill relative flex items-center gap-2 bg-forest px-3.5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-pink sm:px-4 md:py-2.5"
                 aria-label={`Open bag, ${count} items`}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
@@ -96,7 +96,7 @@ export function Header() {
               </button>
               <button
                 onClick={() => setMenu(!menuOpen)}
-                className="pill flex h-10 w-10 flex-col items-center justify-center gap-1.5 border-[1.5px] border-current lg:hidden"
+                className="pill flex h-11 w-11 flex-col items-center justify-center gap-1.5 border-[1.5px] border-current lg:hidden"
                 aria-expanded={menuOpen}
                 aria-controls="mobile-menu"
                 aria-label="Menu"

@@ -4,20 +4,27 @@ import Image from "next/image";
 import { site } from "@/content/site";
 import { useGsap } from "@/lib/gsap";
 import { Sticker } from "@/components/ui/Sticker";
+import { floatAll } from "@/components/motion/Float";
 
 /** Pinned manifesto: the two source lines light up word by word as you scroll; a pack drifts behind. */
 export function Manifesto() {
   const ref = useGsap<HTMLElement>(({ gsap, root, reduced }) => {
     if (reduced) return;
     const words = root.querySelectorAll<HTMLElement>("[data-w]");
+    floatAll(gsap, root.querySelectorAll<HTMLElement>("[data-float]"), reduced ? 2 : 6, "up");
     gsap.set(words, { opacity: 0.14 });
-    gsap.to(words, {
-      opacity: 1,
-      stagger: 0.5,
-      ease: "none",
-      scrollTrigger: { trigger: root, start: "top top", end: "+=140%", scrub: 0.4, pin: root.querySelector("[data-pin]"), anticipatePin: 1, invalidateOnRefresh: true },
+    const mm = gsap.matchMedia();
+    mm.add({ phone: "(max-width: 767px)", wide: "(min-width: 768px)" }, (ctx) => {
+      const phone = !!ctx.conditions?.phone;
+      gsap.to(words, {
+        opacity: 1,
+        stagger: 0.5,
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top top", end: phone ? "+=90%" : "+=140%", scrub: 0.4, pin: root.querySelector("[data-pin]"), anticipatePin: 1, invalidateOnRefresh: true },
+      });
     });
     gsap.to(root.querySelector("[data-pack]"), { yPercent: -40, rotate: 10, ease: "none", scrollTrigger: { trigger: root, start: "top bottom", end: "bottom top", scrub: true } });
+    return () => mm.revert();
   });
 
   const text = site.manifesto.lines.join(" ");
@@ -25,8 +32,9 @@ export function Manifesto() {
   return (
     <section ref={ref} className="relative" aria-labelledby="manifesto-title">
       <div data-pin className="relative flex min-h-[100svh] items-center overflow-hidden">
-        <Image data-pack src="/products/jamun.png" alt="" width={360} height={580} className="pack-shadow pointer-events-none absolute -right-10 bottom-[-6%] w-[34vw] max-w-[360px] opacity-90 md:right-[3vw] md:w-[26vw]" aria-hidden />
+        <Image data-pack src="/products/jamun.png" alt="" width={360} height={580} className="pack-shadow pointer-events-none absolute bottom-[-6%] right-[3vw] hidden w-[26vw] max-w-[360px] opacity-90 md:block" aria-hidden />
         <div className="container-x relative z-10 py-24">
+          <Image data-float src="/products/jamun.png" alt="" width={200} height={320} className="pack-shadow mb-6 w-[26vw] max-w-[140px] -rotate-6 md:hidden" aria-hidden />
           <h2 id="manifesto-title" className="t-h1 max-w-6xl font-display text-forest md:max-w-[62vw]">
             {text.split(" ").map((w, i) => (
               <span key={i} data-w className="inline-block">

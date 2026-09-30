@@ -85,7 +85,7 @@ export function SearchOverlay() {
 
         <p className="mt-10 font-display text-xl">{q ? `${results.length} result${results.length === 1 ? "" : "s"} for “${q}”` : "Popular right now"}</p>
         {q && !results.length && <p className="t-h3 mt-4 font-display">{site.search.empty}</p>}
-        <div className="mt-8 grid grid-cols-2 gap-x-5 gap-y-12 overflow-y-auto pb-6 pr-1 sm:grid-cols-3 lg:grid-cols-4 scrollbar-none">
+        <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 overflow-y-auto pb-24 pr-1 scrollbar-none sm:grid-cols-3 md:mt-8 md:gap-x-5 md:gap-y-12 md:pb-6 lg:grid-cols-4">
           {results.map((p) => (
             <ProductCard key={p.slug} p={p} />
           ))}

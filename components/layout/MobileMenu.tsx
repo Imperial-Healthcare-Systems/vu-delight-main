@@ -10,6 +10,7 @@ import { byCategory } from "@/content/products";
 import { useGsap } from "@/lib/gsap";
 import { cn, skuVars } from "@/lib/utils";
 
+/** Full-screen phone menu: links start right under the header, shelf tiles follow, the signature sits at the foot. */
 export function MobileMenu() {
   const { menuOpen, setMenu } = useUI();
 
@@ -38,7 +39,7 @@ export function MobileMenu() {
       )}
       aria-hidden={!menuOpen}
     >
-      <div className="container-x flex flex-1 flex-col justify-end gap-8 pb-10 pt-32">
+      <div className="container-x flex flex-1 flex-col gap-8 overflow-y-auto pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[calc(var(--header-h)+2.5rem)] scrollbar-none">
         <nav className="flex flex-col gap-1" aria-label="Mobile">
           {site.nav.map((n, i) => (
             <span key={n.href} className="line-mask">
@@ -49,7 +50,7 @@ export function MobileMenu() {
             </span>
           ))}
         </nav>
-        <div className="flex gap-3 overflow-x-auto scrollbar-none">
+        <div className="grid grid-cols-2 gap-3">
           {categories.map((c) => {
             const p = byCategory(c.slug)[0];
             return (
@@ -57,16 +58,22 @@ export function MobileMenu() {
                 key={c.slug}
                 data-tile
                 href={`/collections/${c.slug}`}
-                className="tile sku-bg relative flex h-40 w-36 shrink-0 flex-col justify-end overflow-hidden p-4"
+                className="tile sku-bg relative flex h-36 flex-col justify-end overflow-hidden p-4"
                 style={skuVars(c.accent, c.ink, c.accent)}
               >
-                <Image src={p.image} alt="" width={120} height={190} className="pack-shadow absolute -right-4 -top-3 w-20 rotate-12" />
+                <Image src={p.image} alt="" width={120} height={190} className="pack-shadow absolute -right-3 -top-3 w-20 rotate-12" />
                 <span className="relative z-10 text-sm font-semibold">{c.short}</span>
+                <span className="relative z-10 text-xs opacity-80">{byCategory(c.slug).length} packs</span>
               </TransitionLink>
             );
           })}
         </div>
-        <p className="text-sm opacity-60">{site.signature}</p>
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-cream/15 pt-5 text-sm">
+          <p className="opacity-60">{site.signature}</p>
+          <TransitionLink href="/contact" className="pill shrink-0 border border-cream/30 px-4 py-2 text-xs font-semibold">
+            Contact
+          </TransitionLink>
+        </div>
       </div>
     </div>
   );

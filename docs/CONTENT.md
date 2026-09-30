@@ -16,6 +16,7 @@ Process and category facts **[R]** come from the research section at the end. Al
 - Announcement strip (rotates): "New: jaggery tea with ginger, and with cardamom" · "Masala okra and masala zucchini have joined the freeze dried shelf" · "Twelve packs. Ingredient lists you can read in one breath"
 - Nav: Shop · Freeze Dried · Jaggery Tea · Our Story · Contact (island nav; search + club icons)
 - Search: placeholder "Search mango, chai, crunch…" · empty "Nothing by that name yet. Try mango, jamun or chai."
+- Phone tab bar: Home · Shop · Search · Bag · Stroke marquee heading on touch: "Tap a word, meet the pack."
 
 ## Home
 
@@ -42,6 +43,8 @@ Process and category facts **[R]** come from the research section at the end. Al
 **Start with these.** — Six packs we would hand you first: two teas, and the fruit that converts the doubters.
 
 **What's inside. What *isn't.*** **[C][P]** — Inside: Fruit · Veg + spices · Tea + jaggery. Not inside, ever: palm oil · preservatives · added sugar · anything from an animal.
+
+(Order on the page: Bundles, then Reviews.)
 
 **What people *say.*** — SAMPLE REVIEWS. Eight first-name + city quotes, each tied to a SKU, in `site.testimonials.reviews`.
 They are placeholders for the frontend demo and the section prints "Sample reviews shown while the store connects.

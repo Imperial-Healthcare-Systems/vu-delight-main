@@ -9,11 +9,16 @@ import { cn, skuVars } from "@/lib/utils";
 
 /**
  * Two skins from the same data:
- *  "tile"  → Nutraj-style coloured oval box, pack overflowing the top (rails, tiles)
+ *  "tile"  → Nutraj-style coloured oval box, pack overflowing the top (rails, tiles, grids)
  *  "card"  → white card on dark (Exotic-Nuts style rail), name + weight + quick add
+ *
+ * Quick-add "+": white with the pack colour on every tile; turns black once that product is in the bag.
+ * Tile on phones: the "+" sits top-right and the label spans the full width, so long names never run
+ * under the button in a two-column grid. On md+ the button returns to the bottom-right corner.
  */
 export function ProductCard({ p, skin = "tile", className, priority }: { p: Product; skin?: "tile" | "card"; className?: string; priority?: boolean }) {
   const add = useCart((s) => s.add);
+  const inBag = useCart((s) => s.lines.some((l) => l.slug === p.slug));
   const setCart = useUI((s) => s.setCart);
   const quick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -21,6 +26,7 @@ export function ProductCard({ p, skin = "tile", className, priority }: { p: Prod
     add(p.slug);
     setCart(true);
   };
+  const label = inBag ? `${displayName(p)} is in your bag. Add another` : `Add ${displayName(p)} to bag`;
 
   if (skin === "card") {
     return (
@@ -40,7 +46,11 @@ export function ProductCard({ p, skin = "tile", className, priority }: { p: Prod
             <p className="font-display text-xl leading-tight">{p.name}</p>
             <p className="mt-1 text-xs opacity-60">{p.weight}</p>
           </div>
-          <button onClick={quick} className="pill sku-bg h-10 w-10 shrink-0 text-xl leading-none transition-transform hover:scale-110" aria-label={`Add ${displayName(p)} to bag`}>
+          <button
+            onClick={quick}
+            className={cn("pill h-11 w-11 shrink-0 text-xl leading-none transition-[transform,background-color,color] duration-300 hover:scale-110 md:h-10 md:w-10", inBag ? "bg-ink text-cream" : "sku-bg")}
+            aria-label={label}
+          >
             +
           </button>
         </div>
@@ -56,7 +66,7 @@ export function ProductCard({ p, skin = "tile", className, priority }: { p: Prod
       aria-label={displayName(p)}
     >
       <div className="tile sku-bg noise relative aspect-[4/5] overflow-visible @container transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-2">
-        {p.tag && <span className="sticker absolute right-4 top-4 z-10 bg-[var(--sku-ink)] text-[var(--sku)]">{p.tag}</span>}
+        {p.tag && <span className="sticker absolute left-3 top-3 z-10 bg-white text-forest md:left-auto md:right-4 md:top-4">{p.tag}</span>}
         <p
           className="t-display pointer-events-none absolute inset-x-4 bottom-[24%] select-none whitespace-nowrap leading-none opacity-[0.14]"
           style={{ fontSize: `min(22cqw, ${(88 / (p.name.length * 0.58)).toFixed(1)}cqw)` }}
@@ -73,15 +83,20 @@ export function ProductCard({ p, skin = "tile", className, priority }: { p: Prod
           priority={priority}
           className="pack-shadow absolute left-1/2 top-[-14%] w-[58%] -translate-x-1/2 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:-translate-y-3 group-hover:rotate-[-4deg] group-hover:scale-105"
         />
-        <div className="absolute inset-x-5 bottom-5 flex items-end justify-between">
-          <div>
-            <p className="text-[0.72rem] opacity-80">{p.descriptor}</p>
-            <p className="font-display text-2xl leading-none md:text-3xl">{p.name}</p>
-          </div>
-          <button onClick={quick} className="pill grid h-10 w-10 place-items-center bg-[var(--sku-ink)] text-[var(--sku)] transition-transform hover:scale-110" aria-label={`Add ${displayName(p)} to bag`}>
-            +
-          </button>
+        <div className="absolute inset-x-4 bottom-4 md:inset-x-5 md:bottom-5 md:pr-14">
+          <p className="text-[0.72rem] opacity-80">{p.descriptor}</p>
+          <p className="font-display text-xl leading-none md:text-3xl">{p.name}</p>
         </div>
+        <button
+          onClick={quick}
+          className={cn(
+            "pill absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center text-xl leading-none shadow-[0_6px_20px_rgba(1,50,21,.15)] transition-[transform,background-color,color] duration-300 hover:scale-110 md:bottom-5 md:right-5 md:top-auto",
+            inBag ? "bg-ink text-cream" : "bg-white text-[var(--sku)]",
+          )}
+          aria-label={label}
+        >
+          +
+        </button>
       </div>
     </TransitionLink>
   );

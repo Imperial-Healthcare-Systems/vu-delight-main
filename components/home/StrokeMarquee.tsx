@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { Marquee } from "@/components/motion/Marquee";
 import { TransitionLink } from "@/components/layout/TransitionLink";
-import { Logo } from "@/components/ui/Logo";
 import { byCategory, products } from "@/content/products";
 import { categories } from "@/content/categories";
 import { site } from "@/content/site";
@@ -31,8 +30,10 @@ const SPEEDS = [44, 60, 36, 52];
 
 /**
  * Four rows of outlined type moving at different speeds and directions (Ocean Spray reference).
- * Hover or focus a word: the row pauses, the word fills in its pack colour, the section washes with
- * that colour and the pack pops above (even rows) or below (odd rows) the word.
+ * Hover or focus a word: the row pauses, the word fills in its pack colour, the section washes with that
+ * colour and the pack pops next to the word. Rows in the top half pop the pack downwards, rows in the bottom
+ * half pop it upwards, so it always lands inside the section. Every pack image is mounted up front (hidden),
+ * so the first hover shows a pack instantly instead of waiting on a fetch.
  */
 export function StrokeMarquee() {
   const ref = useRef<HTMLElement>(null);
@@ -41,14 +42,14 @@ export function StrokeMarquee() {
   const hover = (w: Word, el: HTMLElement, row: number) => {
     const r = el.getBoundingClientRect();
     const s = ref.current!.getBoundingClientRect();
-    const below = row % 2 === 1;
+    const below = row < ROWS / 2;
     setActive({ w, x: r.left - s.left + r.width / 2, y: r.top - s.top + (below ? r.height : 0), below });
   };
 
   return (
     <section
       ref={ref}
-      className="relative overflow-hidden py-14 md:py-20"
+      className="relative overflow-hidden py-10 md:py-20"
       aria-labelledby="stroke-title"
       style={active ? skuVars(active.w.accent, active.w.ink, active.w.soft) : undefined}
       onPointerLeave={() => setActive(null)}
@@ -61,13 +62,11 @@ export function StrokeMarquee() {
 
       <div className="container-x relative mb-6 flex items-end justify-between gap-6 md:mb-8">
         <h2 id="stroke-title" className="t-h3 font-display">
-          {site.strokeHeading}
+          <span className="md:hidden">{site.strokeHeadingTouch}</span>
+          <span className="hidden md:inline">{site.strokeHeading}</span>
         </h2>
-        <p className="hidden items-center gap-3 text-sm opacity-60 md:flex">
+        <p className="hidden text-sm opacity-60 md:block">
           {products.length} packs · {categories.length} shelves
-          <span className="grid h-10 w-10 -rotate-12 place-items-center rounded-full border border-cream/25" aria-hidden>
-            <Logo variant="cream" className="h-4" />
-          </span>
         </p>
       </div>
 
@@ -98,20 +97,24 @@ export function StrokeMarquee() {
             }
           </Marquee>
         ))}
+      </div>
 
-        {active?.w.image && (
+      {/* packs: all mounted, positioned against the section (the same box `hover()` measures against) */}
+      {words.map((w) => {
+        const on = active?.w.key === w.key;
+        return (
           <Image
-            key={active.w.key}
-            src={active.w.image}
+            key={w.key}
+            src={w.image!}
             alt=""
             width={200}
             height={320}
-            className="pack-shadow pointer-events-none absolute z-20 hidden w-[9vw] max-w-[150px] animate-[pop_.5s_var(--ease-out-expo)_both] md:block"
-            style={{ left: active.x, top: active.below ? active.y + 6 : active.y - 6, ["--pop-y" as string]: active.below ? "0%" : "-100%" }}
+            className={cn("pack-shadow pointer-events-none absolute z-20 hidden w-[8vw] max-w-[130px] md:block", on ? "animate-[pop_.5s_var(--ease-out-expo)_both]" : "opacity-0")}
+            style={on && active ? { left: active.x, top: active.below ? active.y + 6 : active.y - 6, ["--pop-y" as string]: active.below ? "0%" : "-100%" } : { left: 0, top: 0 }}
             aria-hidden
           />
-        )}
-      </div>
+        );
+      })}
     </section>
   );
 }

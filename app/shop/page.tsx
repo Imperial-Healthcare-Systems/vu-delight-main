@@ -19,7 +19,7 @@ export default function Shop() {
           ))}
         </Marquee>
       </div>
-      <section className="py-14 md:py-20" aria-label="Products">
+      <section className="py-10 md:py-20" aria-label="Products">
         <ProductBrowser />
       </section>
     </>

@@ -45,10 +45,10 @@ export function Testimonials() {
   });
 
   return (
-    <section className="py-20 md:py-28" aria-labelledby="say-title">
+    <section className="py-14 md:py-28" aria-labelledby="say-title">
       <div className="container-x">
         <SectionHead id="say-title" title={t.title} mark={t.mark} markColor="pink" copy={t.copy} />
-        <div className="mt-14 grid gap-10 md:grid-cols-12 md:items-center">
+        <div className="mt-10 grid md:mt-14 gap-10 md:grid-cols-12 md:items-center">
           <div className="md:col-span-5">
             <Swiper
               modules={[EffectCards, Autoplay]}
@@ -57,7 +57,7 @@ export function Testimonials() {
               grabCursor
               loop
               speed={650}
-              autoplay={{ delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true }}
+              autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
               className="!mx-auto !w-[78vw] max-w-[380px] md:!w-full md:max-w-[420px]"
             >
               {t.reviews.map((r, i) => (

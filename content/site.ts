@@ -36,6 +36,8 @@ export const site = {
     copy: "Freeze dried fruit and masala veg on one shelf, jaggery tea on the other. More shelves are coming. The ingredient lists will stay short.",
   },
   strokeHeading: "Hover a word, meet the pack.",
+  strokeHeadingTouch: "Tap a word, meet the pack.",
+  mobileBar: { home: "Home", shop: "Shop", search: "Search", bag: "Bag" },
   manifesto: {
     lines: ["We believe healthy food should never feel like a compromise.", "We don't simply sell food. We create moments of delight."],
     stickers: ["Premium", "Natural", "Wholesome"],

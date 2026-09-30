@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
 
   return (
     <div style={skuVars(p.accent, p.ink, p.soft)}>
-      <nav className="container-x pt-[calc(var(--header-h)+3rem)] text-sm opacity-70" aria-label="Breadcrumb">
+      <nav className="container-x pt-[calc(var(--header-h)+2rem)] text-sm opacity-70 md:pt-[calc(var(--header-h)+3rem)]" aria-label="Breadcrumb">
         <TransitionLink href="/shop" className="hover:underline">
           Shop
         </TransitionLink>{" "}
@@ -58,9 +58,9 @@ export default async function ProductPage({ params }: PageProps<"/products/[slug
         </Marquee>
       </div>
 
-      <section className="container-x py-20 md:py-28" aria-labelledby="more-title">
+      <section className="container-x py-14 md:py-28" aria-labelledby="more-title">
         <SectionHead id="more-title" title="Goes well" mark="with." copy={`More from the ${cat.name} shelf.`} />
-        <Reveal className="mt-16 grid grid-cols-2 gap-x-5 gap-y-14 md:grid-cols-4 md:gap-x-7">
+        <Reveal className="mt-10 grid grid-cols-2 gap-x-4 gap-y-8 md:mt-16 md:grid-cols-4 md:gap-x-7 md:gap-y-14">
           {others.slice(0, 4).map((x) => (
             <div key={x.slug} data-item>
               <ProductCard p={x} />

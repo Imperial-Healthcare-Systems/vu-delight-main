@@ -9,10 +9,10 @@ const noIcons: BadgeIcon[] = ["no-palm", "no-preservative", "no-sugar", "vegan"]
 /** Let's Try "Why choose us" energy, without inventing competitor claims: what is in the bag, what is not. */
 export function InsideOutside() {
   return (
-    <section className="py-20 md:py-28" aria-labelledby="inside-title">
+    <section className="py-14 md:py-28" aria-labelledby="inside-title">
       <div className="container-x">
         <SectionHead id="inside-title" title={site.inside.title} mark={site.inside.mark} markColor="pink" copy={site.inside.copy} />
-        <Reveal className="mt-14 grid gap-5 md:grid-cols-5">
+        <Reveal className="mt-10 grid md:mt-14 gap-5 md:grid-cols-5">
           <ul data-item className="tile bg-forest p-8 text-cream md:col-span-2 md:p-10">
             <li className="mb-6 font-display text-2xl text-lime">Inside</li>
             {site.inside.yes.map((y, i) => (

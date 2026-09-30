@@ -5,23 +5,32 @@ import { useState } from "react";
 import { TransitionLink } from "./TransitionLink";
 import { Marquee } from "@/components/motion/Marquee";
 import { Magnetic } from "@/components/motion/Magnetic";
+import { floatAll } from "@/components/motion/Float";
 import { Logo } from "@/components/ui/Logo";
 import { site } from "@/content/site";
 import { categories } from "@/content/categories";
 import { products } from "@/content/products";
 import { useGsap } from "@/lib/gsap";
 
+interface Group {
+  title: string;
+  links: { label: string; href?: string }[];
+}
+
 /**
  * The Big Sign-off. On large screens it sits behind the page (sticky) so the content lifts away to reveal it.
- * Giant stroke wordmark fills letter by letter on hover; a pack rail drifts in with scroll.
+ * Giant stroke wordmark fills letter by letter on hover; the hanging pack rail drifts in with scroll and then
+ * keeps floating, neighbours out of phase. On phones the three link columns become Shop / Brand / Help dropdowns.
  */
 export function Footer() {
   const [sent, setSent] = useState(false);
   const ref = useGsap<HTMLElement>(({ gsap, root, reduced }) => {
+    const packs = root.querySelectorAll<HTMLElement>("[data-pack]");
+    floatAll(gsap, packs, reduced ? 2 : 6, "down");
     if (reduced) return;
     if (window.matchMedia("(min-width: 1024px)").matches)
       gsap.from(root.querySelector("[data-inner]"), { yPercent: -18, ease: "none", scrollTrigger: { trigger: root, start: "top bottom", end: "bottom bottom", scrub: true } });
-    gsap.from(root.querySelectorAll("[data-pack]"), {
+    gsap.from(packs, {
       y: 80,
       rotate: (i) => (i % 2 ? 14 : -14),
       ease: "none",
@@ -31,9 +40,30 @@ export function Footer() {
   });
 
   const word = "VuDelight";
+  const groups: Group[] = [
+    { title: "Shop", links: [{ label: "All products", href: "/shop" }, ...categories.map((c) => ({ label: c.name, href: `/collections/${c.slug}` }))] },
+    {
+      title: "Brand",
+      links: [
+        { label: "Our story", href: "/story" },
+        { label: "How we compare", href: "/story#compare" },
+        { label: "Contact", href: "/contact" },
+      ],
+    },
+    { title: "Help", links: site.footer.help.map((h) => ({ label: h })) },
+  ];
+
+  const Link = ({ l }: { l: Group["links"][number] }) =>
+    l.href ? (
+      <FootLink href={l.href}>{l.label}</FootLink>
+    ) : (
+      <span className="inline-block cursor-not-allowed py-1 opacity-60 md:py-0" title="Coming with the store">
+        {l.label}
+      </span>
+    );
 
   return (
-    <footer ref={ref} className="relative z-0 overflow-hidden bg-forest text-cream lg:sticky lg:bottom-0" aria-labelledby="footer-heading">
+    <footer ref={ref} className="relative z-0 overflow-hidden bg-forest pb-24 text-cream md:pb-0 lg:sticky lg:bottom-0" aria-labelledby="footer-heading">
       <div data-inner className="relative">
         <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-between px-[3vw] opacity-90">
           {products.slice(0, 8).map((p, i) => (
@@ -60,7 +90,7 @@ export function Footer() {
             </span>
           </TransitionLink>
 
-          <div className="mt-8 grid gap-12 border-t border-cream/15 pt-12 md:grid-cols-12">
+          <div className="mt-8 grid gap-8 border-t border-cream/15 pt-10 md:grid-cols-12 md:gap-12 md:pt-12">
             <div className="md:col-span-5">
               <p className="t-h3 font-display">{site.signature}</p>
               <p className="mt-3 max-w-sm text-sm opacity-70">{site.footer.line}</p>
@@ -80,46 +110,41 @@ export function Footer() {
               </form>
             </div>
 
-            <nav className="grid grid-cols-2 gap-8 md:col-span-7 md:grid-cols-3" aria-label="Footer">
-              <div>
-                <p className="mb-4 font-display text-lg">Shop</p>
-                <ul className="flex flex-col gap-2 text-[0.95rem]">
-                  <li>
-                    <FootLink href="/shop">All products</FootLink>
-                  </li>
-                  {categories.map((c) => (
-                    <li key={c.slug}>
-                      <FootLink href={`/collections/${c.slug}`}>{c.name}</FootLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="mb-4 font-display text-lg">Brand</p>
-                <ul className="flex flex-col gap-2 text-[0.95rem]">
-                  <li>
-                    <FootLink href="/story">Our story</FootLink>
-                  </li>
-                  <li>
-                    <FootLink href="/story#compare">How we compare</FootLink>
-                  </li>
-                  <li>
-                    <FootLink href="/contact">Contact</FootLink>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="mb-4 font-display text-lg">Help</p>
-                <ul className="flex flex-col gap-2 text-[0.95rem] opacity-80">
-                  {site.footer.help.map((h) => (
-                    <li key={h}>
-                      <span className="cursor-not-allowed opacity-70" title="Coming with the store">
-                        {h}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {/* md+: three columns */}
+            <nav className="hidden grid-cols-3 gap-8 md:col-span-7 md:grid" aria-label="Footer">
+              {groups.map((g) => (
+                <div key={g.title}>
+                  <p className="mb-4 font-display text-lg">{g.title}</p>
+                  <ul className="flex flex-col gap-2 text-[0.95rem]">
+                    {g.links.map((l) => (
+                      <li key={l.label}>
+                        <Link l={l} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+
+            {/* phones: dropdowns */}
+            <nav className="md:hidden" aria-label="Footer">
+              {groups.map((g) => (
+                <details key={g.title} className="group border-t border-cream/15 last:border-b">
+                  <summary className="flex cursor-pointer list-none items-center justify-between py-4 font-display text-lg">
+                    {g.title}
+                    <span className="grid h-9 w-9 place-items-center rounded-full border border-cream/25 text-lg leading-none transition-transform duration-300 group-open:rotate-45" aria-hidden>
+                      +
+                    </span>
+                  </summary>
+                  <ul className="flex flex-col gap-1 pb-4 text-[0.95rem]">
+                    {g.links.map((l) => (
+                      <li key={l.label}>
+                        <Link l={l} />
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
             </nav>
           </div>
         </div>
@@ -147,7 +172,7 @@ export function Footer() {
 
 function FootLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <TransitionLink href={href} className="group/l inline-flex items-center gap-2 opacity-80 transition-opacity hover:opacity-100">
+    <TransitionLink href={href} className="group/l inline-flex items-center gap-2 py-1 opacity-80 transition-opacity hover:opacity-100 md:py-0">
       <span className="h-px w-0 bg-tangerine transition-all duration-300 group-hover/l:w-4" />
       {children}
     </TransitionLink>

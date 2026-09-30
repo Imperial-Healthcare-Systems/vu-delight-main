@@ -10,7 +10,7 @@ app/                     routes only — no business logic
   layout.tsx             fonts, Preloader, PageTransition, SmoothScroll, ScrollProgress, ParallaxLayers, Header, Footer,
                          CartDrawer, SearchOverlay, WelcomeModal, CursorDot
   template.tsx           per-navigation page entrance (curtain out)
-  page.tsx               home: sticky Hero + SectionShells that slide over it
+  page.tsx               home: sticky Hero + SectionShells (shelves, stroke marquee, manifesto, method, rail, inside/out, bundles, reviews, club)
   shop/page.tsx          all products, filterable by category and tag
   products/[slug]/       product detail (SKU colour takeover, 2.5D gallery, buy box)
   collections/[slug]/    one landing per category
@@ -22,9 +22,9 @@ components/
   home/                  CategoryShowcase, StrokeMarquee, Manifesto, FreezeStory, ProductRail, InsideOutside, Testimonials, OfferSlider, DelightClub
   story/                 Compare (table + sources)
   products/              ProductCard (tile + card skins), ProductBrowser, ProductGallery, BuyBox, ProductDetails (accordions)
-  layout/                Header (island nav), MobileMenu, Footer, CartDrawer, SearchOverlay, SmoothScroll, ScrollProgress,
-                         Preloader, PageTransition, TransitionLink, PageHero, WelcomeModal
-  motion/                TextReveal, Reveal, Marquee, Magnetic, Tilt, SectionShell, ParallaxLayers — generic
+  layout/                Header (island nav), MobileMenu, MobileBar (phone tab bar), Footer, CartDrawer, SearchOverlay, SmoothScroll,
+                         ScrollProgress, Preloader, PageTransition, TransitionLink, PageHero, WelcomeModal
+  motion/                TextReveal, Reveal, Marquee, Magnetic, Tilt, SectionShell, ParallaxLayers, Float — generic
   ui/                    Button, Logo, Sticker, SectionHead, Hi (highlighter swash), AmbientBlobs, CursorDot
   forms/                 EnquiryForm (frontend only, field names fixed for the API)
 content/                 ALL copy and data. The backend replaces these modules 1:1.
@@ -35,7 +35,7 @@ lib/
   types.ts               Product, Category, Badge, CartLine
   gsap.ts                registers plugins once; useGsap() scoped hook passes `reduced` to every setup
   lenis.ts               Lenis singleton stepped by the GSAP ticker (off under reduced motion); scrollTo()
-  store.ts               Zustand: cart (persisted) + UI (cart / menu / search / club open)
+  store.ts               Zustand: cart (persisted, skipHydration; rehydrated in SmoothScroll after mount so SSR and first paint match) + UI state
   transition.ts          tiny event bus for the route curtain
   utils.ts               cn(), skuVars(), reducedMotion(), colour helpers
 public/
@@ -99,6 +99,23 @@ Nothing else knows about data origin.
   covered the page (no sweep on fresh loads). `template.tsx` remounts per route.
 - The first `SectionShell` after the hero uses `overlap={false}` so it never covers the hero CTA row.
 - Hero is `sticky top-0`; the shells are `relative z-10+`. The footer is sticky-revealed on `lg` only.
+
+## Mobile strategy
+
+One breakpoint matters: `md` (768px). Below it the site is "phone"; at and above it the design is the desktop design.
+Phone behaviour is expressed three ways, in this order of preference:
+
+1. **Responsive classes** (`md:` / `lg:` prefixes, `min-[400px]:`, `pointer-fine:`) — layout, sizes, what is shown.
+2. **`gsap.matchMedia()`** inside `useGsap` setups when the *motion* differs (FreezeStory: pin vs native carousel;
+   Manifesto: shorter pin; SectionShell: gentler radius). Cleanup returns `mm.revert()`.
+3. **Phone-only components** (`MobileBar`, the sticky bar inside `BuyBox`) rendered with `md:hidden`.
+
+`ScrollTrigger.config({ ignoreMobileResize: true })` stops address-bar resizes from re-measuring pins. Fixed bottom
+bars use `bottom-[max(0.75rem,env(safe-area-inset-bottom))]` and the viewport is `viewport-fit=cover`.
+
+Verified widths: 360 (small Android), 390 (iPhone 14/15), 430 (Pro Max), 768 (tablet), 1440 (desktop). The mobile
+suite (`mobile.js` in the session scratchpad) checks overflow, tap-target size, text under 11px, the hero ring vs the
+header, tile label vs button, sticky bars, the carousel dots, the compare cards and that desktop still hides all of it.
 
 ## Cascade note (Tailwind v4)
 

@@ -5,8 +5,8 @@ import { Manifesto } from "@/components/home/Manifesto";
 import { FreezeStory } from "@/components/home/FreezeStory";
 import { ProductRail } from "@/components/home/ProductRail";
 import { InsideOutside } from "@/components/home/InsideOutside";
-import { Testimonials } from "@/components/home/Testimonials";
 import { OfferSlider } from "@/components/home/OfferSlider";
+import { Testimonials } from "@/components/home/Testimonials";
 import { DelightClub } from "@/components/home/DelightClub";
 import { AmbientBlobs } from "@/components/ui/AmbientBlobs";
 import { SectionShell } from "@/components/motion/SectionShell";
@@ -44,17 +44,17 @@ export default function Home() {
         <SectionShell i={3} tone="forest" pinned>
           <FreezeStory />
         </SectionShell>
-        <SectionShell i={4}>
+        <SectionShell i={4} tone="rail">
           <ProductRail />
         </SectionShell>
         <SectionShell i={5} tone="cream-2">
           <InsideOutside />
         </SectionShell>
         <SectionShell i={6}>
-          <Testimonials />
+          <OfferSlider />
         </SectionShell>
         <SectionShell i={7} tone="cream-2">
-          <OfferSlider />
+          <Testimonials />
         </SectionShell>
         <SectionShell i={8} className="isolate">
           <AmbientBlobs />

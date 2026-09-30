@@ -89,10 +89,10 @@ export function WelcomeModal() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="welcome-title"
-          className="relative grid w-full max-w-3xl overflow-hidden rounded-[2rem] bg-cream shadow-2xl md:grid-cols-2"
+          className="relative grid max-h-[92svh] w-full max-w-3xl overflow-y-auto overflow-x-hidden rounded-[1.5rem] bg-cream shadow-2xl md:grid-cols-2 md:rounded-[2rem]"
           style={skuVars(hero.accent, hero.ink, hero.soft)}
         >
-          <div className="sku-bg noise relative min-h-64 overflow-hidden md:min-h-full">
+          <div className="sku-bg noise relative min-h-52 overflow-hidden md:min-h-full">
             <p className="t-display absolute -left-4 top-4 select-none opacity-15" aria-hidden>
               Yum
             </p>
@@ -111,7 +111,7 @@ export function WelcomeModal() {
               Delight Club
             </Sticker>
           </div>
-          <div className="flex flex-col justify-center gap-5 p-8 md:p-10">
+          <div className="flex flex-col justify-center gap-4 p-6 md:gap-5 md:p-10">
             <button onClick={close} className="pill absolute right-4 top-4 h-9 w-9 border-[1.5px] border-current text-lg leading-none" aria-label="Close">
               ×
             </button>

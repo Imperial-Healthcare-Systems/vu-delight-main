@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { BRAND_BADGES, displayName, PRICING_ENABLED } from "@/content/products";
 import { useCart, useUI } from "@/lib/store";
@@ -7,20 +8,20 @@ import type { Product } from "@/lib/types";
 import { BadgeIconSvg } from "@/components/ui/Sticker";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { Reveal } from "@/components/motion/Reveal";
-import { Logo } from "@/components/ui/Logo";
 import { ProductDetails } from "./ProductDetails";
 
 export function BuyBox({ p }: { p: Product }) {
   const [qty, setQty] = useState(1);
   const add = useCart((s) => s.add);
   const setCart = useUI((s) => s.setCart);
+  const addToBag = () => {
+    add(p.slug, qty);
+    setCart(true);
+  };
 
   return (
     <div className="flex flex-col gap-8">
       <div className="relative">
-        <span className="absolute right-0 top-0 hidden h-14 w-14 -rotate-12 place-items-center rounded-full border border-forest/15 md:grid" aria-hidden>
-          <Logo variant="forest" className="h-6" />
-        </span>
         <TextReveal as="h1" mode="chars" immediate className="t-h1 font-display text-forest">
           {p.name}
         </TextReveal>
@@ -55,14 +56,8 @@ export function BuyBox({ p }: { p: Product }) {
             +
           </button>
         </div>
-        <button
-          onClick={() => {
-            add(p.slug, qty);
-            setCart(true);
-          }}
-          className="pill sku-bg flex-1 px-8 py-3.5 font-semibold transition-[filter,transform] hover:brightness-95 active:scale-[0.98]"
-        >
-          Add to bag · {displayName(p)}
+        <button onClick={addToBag} className="pill sku-bg flex-1 px-6 py-3.5 font-semibold transition-[filter,transform] hover:brightness-95 active:scale-[0.98] md:px-8">
+          Add to bag<span className="hidden sm:inline"> · {displayName(p)}</span>
         </button>
       </div>
       {!PRICING_ENABLED && <p className="-mt-4 text-xs opacity-55">Pricing goes live with the store. Your bag saves on this device.</p>}
@@ -86,6 +81,29 @@ export function BuyBox({ p }: { p: Product }) {
       </div>
 
       <ProductDetails p={p} />
+
+      {/* Mobile-only sticky bar: the standard D2C pattern so the buy action stays one thumb away while reading. */}
+      <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 flex items-center gap-2 rounded-full border border-forest/10 bg-cream/95 p-1.5 pl-2 shadow-[0_12px_40px_rgba(1,50,21,.18)] backdrop-blur-xl md:hidden">
+        <span className="sku-soft hidden h-10 w-10 shrink-0 place-items-center rounded-full min-[400px]:grid" aria-hidden>
+          <Image src={p.image} alt="" width={28} height={44} className="h-7 w-auto" />
+        </span>
+        <div className="min-w-0 flex-1 leading-tight">
+          <p className="truncate font-display text-base">{p.name}</p>
+          <p className="text-[0.7rem] opacity-60">{p.weight}</p>
+        </div>
+        <div className="pill flex items-center border border-forest/20" aria-label="Quantity">
+          <button onClick={() => setQty(Math.max(1, qty - 1))} className="h-10 w-10 text-base" aria-label="Decrease quantity">
+            −
+          </button>
+          <span className="w-5 text-center text-sm font-semibold">{qty}</span>
+          <button onClick={() => setQty(qty + 1)} className="h-10 w-10 text-base" aria-label="Increase quantity">
+            +
+          </button>
+        </div>
+        <button onClick={addToBag} className="pill sku-bg h-11 shrink-0 px-4 text-sm font-semibold active:scale-[0.98]">
+          Add to bag
+        </button>
+      </div>
     </div>
   );
 }

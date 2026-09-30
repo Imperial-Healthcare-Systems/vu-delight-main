@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { getLenis, startLenis } from "@/lib/lenis";
 import { ensureGsap } from "@/lib/gsap";
 import { reducedMotion } from "@/lib/utils";
-import { useUI } from "@/lib/store";
+import { useCart, useUI } from "@/lib/store";
 
 /** Boots Lenis once, refreshes ScrollTrigger per route, freezes scroll while overlays are open. */
 export function SmoothScroll() {
@@ -13,6 +13,8 @@ export function SmoothScroll() {
   const { cartOpen, menuOpen, searchOpen } = useUI();
 
   useEffect(() => {
+    // persisted bag is read here, after hydration, so SSR and the first client paint match
+    useCart.persist.rehydrate();
     if (reducedMotion()) return;
     startLenis();
   }, []);

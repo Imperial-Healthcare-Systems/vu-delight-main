@@ -45,7 +45,9 @@ export function ProductGallery({ p }: { p: Product }) {
           </div>
         </Tilt>
       </div>
-      <p className="mt-3 text-center text-xs opacity-50">Actual pack artwork. Move your cursor over it.</p>
+      <p className="mt-3 text-center text-xs opacity-50">
+        Actual pack artwork.<span className="hidden pointer-fine:inline"> Move your cursor over it.</span>
+      </p>
     </div>
   );
 }

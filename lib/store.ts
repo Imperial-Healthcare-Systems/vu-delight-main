@@ -35,7 +35,7 @@ export const useCart = create<CartState>()(
       clear: () => set({ lines: [] }),
       count: () => get().lines.reduce((n, l) => n + l.qty, 0),
     }),
-    { name: "vudelight-cart" },
+    { name: "vudelight-cart", skipHydration: true },
   ),
 );
 

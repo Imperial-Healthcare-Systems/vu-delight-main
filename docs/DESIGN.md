@@ -42,8 +42,8 @@ No eyebrow labels. Every section heading states what the section is ("Two shelve
 meet the pack.", "What's inside. What isn't."). Metadata that used to sit in eyebrows now lives in chips/stickers
 (pack count, weight, tag) or the brand stamp.
 
-**Brand stamp**: a small rotated circle with the logo mark, top-right of every section opener, page header, category
-block and the club panel. This is how the brand recurs in every section without a label row.
+**No stamps.** The logo lives in the header island, the footer, the preloader and the route curtain only. Sections
+carry the brand through colour, type and the packs themselves.
 
 ## 4. Shape
 
@@ -68,12 +68,12 @@ Rule: every entrance is `gsap.from`, so markup is final-state without JS.
 | `parallax` | pack imagery | `data-speed` elements drift ±(speed−1)·200px across their trip through the viewport |
 | `velocity-skew` | marquees, rails | skewX from scroll velocity (±8°), marquee speed doubles with velocity |
 | `conveyor` | category tiles, start-with-these rail | Swiper loop + autoplay delay 0, linear, pauses on hover |
-| `stroke-marquee` | Hover a word section | 4 rows (3 on mobile), hover pauses the row, fills the word, pops the pack |
-| `creative-slider` | bundles | mirrored prev/next transforms (±92%, z −180, scale 0.9), so both sides always match |
+| `stroke-marquee` | Hover a word section | 4 rows (3 on mobile), hover pauses the row, fills the word, pops the pack: top rows pop it below, bottom rows above, so it never leaves the section; all packs are pre-mounted so the first hover is instant |
+| `creative-slider` | bundles | mirrored prev/next transforms (±92%, z −180, scale 0.9), autoplay 3s, packs float inside each card |
 | `curtain` | route change | "threads": nine 2px forest strings draw in from top/bottom (0.32s), widen into bars (0.42s) until covered; the route starts loading as soon as the page is covered while the mark breathes; exit mirrors it in ~0.6s |
 | `crunch` | "Snap." closing the method story | letters burst in (back.out), the word jolts, 14 crumbs scatter, outline flashes solid for 220ms; replays on hover/click |
-| `float` | category showcase packs | after the drop-in, each pack bobs 14–22px on its own 2.6–3.7s sine loop |
-| `deck` | testimonials | Swiper cards effect, autoplay 3.2s; two side columns of mini reviews scroll in opposite directions, pause on hover |
+| `float` | showcase packs, footer rail, Freeze Dried header, bundle cards, method tiles, story tile | `Float` / `floatAll`: neighbours out of phase (one rises while the next settles), 2.8–3.7s sine loops on yPercent; "down" variant for packs hanging from an edge |
+| `deck` | testimonials | Swiper cards effect, autoplay 3.5s; two side columns of mini reviews scroll in opposite directions, pause on hover |
 | `magnetic` | nav links, CTAs | translate toward cursor ×0.15–0.35, elastic return |
 | `cursor` | pointer-fine devices | trailing pink dot that rings over anything clickable |
 | `progress` | top edge | 3px pink line driven by Lenis scroll progress |
@@ -98,10 +98,38 @@ speed (orbit ring, marquees, conveyors), so the page still feels alive and is ne
 - **Compare**: sourced comparison table on the story page (freeze dried vs dehydrated/candied vs vacuum-fried).
 - **Testimonials**: card deck in pack colours plus two counter-scrolling review columns. Sample reviews until the store connects.
 - **DelightClub**: floating sticker wall on pink, one field, one button.
-- **Footer — The Big Sign-off**: sticky reveal (lg+), stroke wordmark that fills on hover, hanging pack rail, signature line.
+- **Footer — The Big Sign-off**: sticky reveal (lg+), stroke wordmark that fills on hover, hanging pack rail that keeps floating, signature line. On phones the Shop / Brand / Help columns are dropdowns.
 - **WelcomeModal**: after the preloader on first visit, and from the header club icon any time.
 
-## 7. Accessibility floor
+## 7. Mobile (under 768px)
+
+Same design, phone-native behaviour. Studied against Nutraj, Let's Try, Pureely and Gelato La Boca on a 390px viewport.
+Everything below is phone-only; md+ is untouched.
+
+- **Bottom tab bar** (`MobileBar`): floating forest pill with Home · Shop · Search · Bag, safe-area aware. Hidden on
+  product pages, where the **sticky add-to-bag bar** (name, weight, stepper, Add) takes the same spot. The footer and
+  the hero keep clearance for it.
+- **Hero**: ring lowered and narrowed so packs never sit behind the header; CTAs stack full width; stickers row centred;
+  no copy card; scroll cue hidden.
+- **Type floors**: `t-h1` and `t-h2` minimums drop to 2.4rem / 1.85rem so display type fits a 326px column; the vw
+  midpoint keeps tablet and desktop exactly as before.
+- **Category blocks**: single column (two columns only from lg), tighter padding, watermark and stamp hidden.
+- **Method story**: native swipe carousel of stacked cards with dots instead of the pinned horizontal scroll, auto-advancing
+  every 3.25s while on screen and pausing under a finger; the Snap. crunch fires when the last card settles.
+- **Rail**: no arrow buttons on touch (swipe); the dark panel grows straight out of the method section, no cream sliver.
+- **Menu**: links start under the header, shelf tiles follow, signature and Contact sit at the foot. No dead space.
+- **Manifesto**: the jamun pack floats above the text on phones instead of jamming into the next section.
+- **Stroke marquee** says "Tap a word" and drops the fourth row.
+- **Product tiles**: quick-add "+" top-right, label full width, name at 1.25rem, so two-up grids never overlap.
+  The "+" is white with the pack colour everywhere and turns black once that product is in the bag.
+- **Filters**: one swipeable chip row that sticks under the header while browsing.
+- **Comparison table** becomes one card per row with the three methods listed inside.
+- **Delight Club** stickers flow as a level wrapped cloud (rotation is an md+ flourish).
+- **Rhythm**: section padding 3.5rem instead of 5–7rem; grid gaps tightened; page tops start 3rem under the header.
+- **Touch**: all controls at least 40×40 (most 44); no text under 11px; `pointer-fine:` variant hides cursor-only hints;
+  bigger Swiper bullets; `-webkit-tap-highlight-color` off; `viewport-fit=cover` for notches.
+
+## 8. Accessibility floor
 
 AA contrast on every text pair (checked per SKU). Visible focus rings (`outline: 2px solid pink`).
 All motion optional. Keyboard-reachable menus, drawer, search and modal (Esc closes). Marquee duplicates are

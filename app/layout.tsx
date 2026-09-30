@@ -13,6 +13,7 @@ import { SearchOverlay } from "@/components/layout/SearchOverlay";
 import { CursorDot } from "@/components/ui/CursorDot";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { ParallaxLayers } from "@/components/motion/ParallaxLayers";
+import { MobileBar } from "@/components/layout/MobileBar";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   icons: { icon: "/brand/logo-forest.png" },
 };
 
-export const viewport: Viewport = { themeColor: "#013215", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#013215", width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <Footer />
+        <MobileBar />
         <CartDrawer />
         <SearchOverlay />
         <WelcomeModal />

@@ -11,7 +11,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/motion/Reveal";
 import { useGsap } from "@/lib/gsap";
 
-/** Nutraj "Explore the World of Exotic Nuts": dark panel with one huge curved corner, white cards, arrow nav. */
+/** Nutraj "Explore the World of Exotic Nuts": dark panel with one huge curved corner, white cards, arrow nav on md+ (swipe on touch). */
 export function ProductRail() {
   const swiper = useRef<SwiperType | null>(null);
   const ref = useGsap<HTMLElement>(({ gsap, ScrollTrigger, root, reduced }) => {
@@ -24,18 +24,16 @@ export function ProductRail() {
   });
 
   return (
-    <section ref={ref} className="relative overflow-x-clip pb-24 pt-10 md:pb-32" aria-labelledby="rail-title">
-      <div className="curve-tr relative ml-0 bg-ink py-20 text-cream md:ml-[4vw] md:py-28">
+    <section ref={ref} className="relative overflow-x-clip pb-16 pt-0 md:pb-32 md:pt-10" aria-labelledby="rail-title">
+      <div className="relative ml-0 rounded-t-[1.75rem] bg-ink py-12 text-cream md:ml-[4vw] md:rounded-none md:curve-tr md:py-28">
         <div className="container-x">
           <SectionHead
             id="rail-title"
-            dark
-            stamp={false}
             title={site.rail.title}
             mark={site.rail.mark}
             copy={site.rail.copy}
             action={
-              <div className="flex gap-2">
+              <div className="hidden gap-2 md:flex">
                 <button onClick={() => swiper.current?.slidePrev(600)} className="pill grid h-12 w-12 place-items-center border border-cream/30 transition-colors hover:bg-cream hover:text-ink" aria-label="Previous">
                   ←
                 </button>
