@@ -161,11 +161,14 @@ export function Footer() {
 
         <div className="container-x flex flex-col items-start justify-between gap-3 border-t border-cream/15 py-6 text-xs sm:flex-row sm:items-center">
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1 opacity-70">
-            <Logo variant="cream" className="h-6" /> © {new Date().getFullYear()} VuDelight · {site.tagline}
+            <Logo variant="cream" className="h-6" />
+            <span>
+              © {new Date().getFullYear()} VuDelight · {site.tagline}
+            </span>
             <span className="hidden sm:inline" aria-hidden>
               ·
             </span>
-            {site.footer.madeIn}
+            <span>{site.footer.madeIn}</span>
           </span>
           <a href={site.footer.builtBy.href} target="_blank" rel="noopener noreferrer" className="group/b inline-flex items-center gap-1.5 self-end py-1 sm:self-auto">
             <span className="opacity-60 transition-opacity group-hover/b:opacity-90">{site.footer.builtBy.label}</span>
