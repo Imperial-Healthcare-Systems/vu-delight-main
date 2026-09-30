@@ -159,11 +159,21 @@ export function Footer() {
           </Marquee>
         </div>
 
-        <div className="container-x flex flex-col items-start justify-between gap-4 border-t border-cream/15 py-6 text-xs opacity-70 sm:flex-row sm:items-center">
-          <span className="flex items-center gap-3">
+        <div className="container-x flex flex-col items-start justify-between gap-3 border-t border-cream/15 py-6 text-xs sm:flex-row sm:items-center">
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1 opacity-70">
             <Logo variant="cream" className="h-6" /> © {new Date().getFullYear()} VuDelight · {site.tagline}
+            <span className="hidden sm:inline" aria-hidden>
+              ·
+            </span>
+            {site.footer.madeIn}
           </span>
-          <span>{site.footer.madeIn}</span>
+          <a href={site.footer.builtBy.href} target="_blank" rel="noopener noreferrer" className="group/b inline-flex items-center gap-1.5 self-end py-1 sm:self-auto">
+            <span className="opacity-60 transition-opacity group-hover/b:opacity-90">{site.footer.builtBy.label}</span>
+            <span className="bg-linear-to-r from-cream via-cream to-cream bg-clip-text font-semibold text-transparent transition-[background-image] duration-500 group-hover/b:from-tangerine group-hover/b:via-pink group-hover/b:to-tangerine">
+              {site.footer.builtBy.name}
+            </span>
+            <span className="h-px w-0 bg-tangerine transition-all duration-300 group-hover/b:w-3" aria-hidden />
+          </a>
         </div>
       </div>
     </footer>

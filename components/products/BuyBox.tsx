@@ -9,12 +9,21 @@ import { BadgeIconSvg } from "@/components/ui/Sticker";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { Reveal } from "@/components/motion/Reveal";
 import { ProductDetails } from "./ProductDetails";
+import { ensureGsap } from "@/lib/gsap";
+import { burstAt } from "@/lib/crunch";
+import { reducedMotion } from "@/lib/utils";
 
 export function BuyBox({ p }: { p: Product }) {
   const [qty, setQty] = useState(1);
   const add = useCart((s) => s.add);
   const setCart = useUI((s) => s.setCart);
-  const addToBag = () => {
+  const addToBag = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (e && !reducedMotion()) {
+      const { gsap } = ensureGsap();
+      const r = e.currentTarget.getBoundingClientRect();
+      burstAt(gsap, [{ x: r.left + r.width * 0.3, y: r.top + r.height / 2 }, { x: r.left + r.width * 0.7, y: r.top + r.height / 2 }], { count: 16, shards: 3, spread: 130, lift: 100, size: [3, 8], duration: [0.6, 1] });
+      gsap.fromTo(e.currentTarget, { scale: 0.94 }, { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.45)" });
+    }
     add(p.slug, qty);
     setCart(true);
   };

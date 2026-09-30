@@ -11,6 +11,7 @@ import { Hi } from "@/components/ui/Hi";
 import { TextReveal } from "@/components/motion/TextReveal";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { skuVars } from "@/lib/utils";
+import { crunchLite } from "@/lib/crunch";
 
 /**
  * THE FRUIT ORBIT.
@@ -48,6 +49,22 @@ export function Hero() {
     gsap.from(root.querySelectorAll("[data-sticker]"), { scale: 0, rotate: -30, duration: 0.8, ease: "back.out(2)", stagger: 0.1, delay: 1.5 });
     gsap.to(root.querySelector("[data-cue-arrow]"), { y: 6, duration: 0.9, yoyo: true, repeat: -1, ease: "sine.inOut" });
 
+    // the nibble: "Bite" crunches once the headline has landed (after the preloader on a first visit), and on hover
+    const bite = root.querySelector<HTMLElement>("[data-bite]")!;
+    const biteText = bite.querySelector<HTMLElement>(".stroke")!;
+    const head = root.querySelector<HTMLElement>("[data-head]");
+    let nibbling = false;
+    const nibble = () => {
+      if (nibbling) return;
+      nibbling = true;
+      crunchLite(gsap, bite, biteText, head).eventCallback("onComplete", () => (nibbling = false));
+    };
+    const arm = () => gsap.delayedCall(1.7, nibble);
+    let armed: ReturnType<typeof gsap.delayedCall> | undefined;
+    if (document.documentElement.dataset.loaded) armed = gsap.delayedCall(2.1, nibble);
+    else window.addEventListener("vud:loaded", arm, { once: true });
+    bite.addEventListener("pointerenter", nibble);
+
     const par = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       const dx = e.clientX / window.innerWidth - 0.5;
@@ -68,7 +85,12 @@ export function Hero() {
       },
     });
     gsap.to(root.querySelector("[data-head]"), { yPercent: -30, opacity: 0.15, ease: "none", scrollTrigger: { trigger: root, start: "top top", end: "+=100%", scrub: true } });
-    return () => window.removeEventListener("pointermove", par);
+    return () => {
+      window.removeEventListener("pointermove", par);
+      window.removeEventListener("vud:loaded", arm);
+      armed?.kill();
+      bite.removeEventListener("pointerenter", nibble);
+    };
   });
 
   const display = "t-display text-[clamp(3.2rem,13vw,5rem)] md:text-[min(10vw,13vh)]";
@@ -105,7 +127,7 @@ export function Hero() {
             <TextReveal as="span" mode="chars" immediate className={`${display} block text-pink`} delay={0.4}>
               {site.hero.lines[1]}
             </TextReveal>
-            <span className={`${display} block text-forest`}>
+            <span data-bite className={`${display} block cursor-default text-forest`}>
               <Hi color="tangerine">
                 <TextReveal as="span" mode="chars" immediate className="stroke inline-block" delay={0.55}>
                   {site.hero.lines[2]}

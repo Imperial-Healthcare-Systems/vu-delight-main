@@ -175,5 +175,6 @@ export const site = {
     line: "Freeze dried fruit, masala veg and jaggery tea, made with care in India.",
     help: ["Shipping & returns", "FAQ", "Wholesale", "Privacy"],
     madeIn: "Made with care in India",
+    builtBy: { label: "Built by", name: "Imperial", href: "https://www.imperialtechinnovations.com/" },
   },
 };

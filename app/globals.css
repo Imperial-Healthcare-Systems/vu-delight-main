@@ -28,6 +28,10 @@
 @utility stroke-fill {
   -webkit-text-fill-color: currentColor;
 }
+/* Added just before removing stroke-fill so the solid fill fades back to outline instead of snapping. */
+@utility fill-fade {
+  transition: -webkit-text-fill-color 0.5s var(--ease-out-expo);
+}
 
 @layer base {
   :root {

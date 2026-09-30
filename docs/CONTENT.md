@@ -84,7 +84,7 @@ two days with a photo; opened or used food packs cannot be returned.
 ## Footer
 
 Giant stroke wordmark · Nourishing People. Enriching Lives. · Freeze dried fruit, masala veg and jaggery tea, made with care in India. ·
-Shop / Brand (Our story, How we compare, Contact) / Help (placeholders) · claims marquee · © VuDelight · Delight in Every Bite · Made with care in India
+Shop / Brand (Our story, How we compare, Contact) / Help (placeholders) · claims marquee · © VuDelight · Delight in Every Bite · Made with care in India · right side: "Built by Imperial" → https://www.imperialtechinnovations.com/ (opens in a new tab)
 
 ## Research (30 Sep 2026)
 

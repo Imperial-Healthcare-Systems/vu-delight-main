@@ -5,7 +5,9 @@ import { TransitionLink } from "@/components/layout/TransitionLink";
 import { displayName } from "@/content/products";
 import { useCart, useUI } from "@/lib/store";
 import type { Product } from "@/lib/types";
-import { cn, skuVars } from "@/lib/utils";
+import { cn, reducedMotion, skuVars } from "@/lib/utils";
+import { ensureGsap } from "@/lib/gsap";
+import { burstAt } from "@/lib/crunch";
 
 /**
  * Two skins from the same data:
@@ -20,9 +22,15 @@ export function ProductCard({ p, skin = "tile", className, priority }: { p: Prod
   const add = useCart((s) => s.add);
   const inBag = useCart((s) => s.lines.some((l) => l.slug === p.slug));
   const setCart = useUI((s) => s.setCart);
-  const quick = (e: React.MouseEvent) => {
+  const quick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!reducedMotion()) {
+      const { gsap } = ensureGsap();
+      const r = e.currentTarget.getBoundingClientRect();
+      burstAt(gsap, [{ x: r.left + r.width / 2, y: r.top + r.height / 2 }], { count: 12, shards: 2, spread: 100, lift: 80, size: [3, 7], duration: [0.5, 0.9] });
+      gsap.fromTo(e.currentTarget, { scale: 0.75 }, { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.4)" });
+    }
     add(p.slug);
     setCart(true);
   };

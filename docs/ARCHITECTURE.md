@@ -38,6 +38,7 @@ lib/
   store.ts               Zustand: cart (persisted, skipHydration; rehydrated in SmoothScroll after mount so SSR and first paint match) + UI state
   transition.ts          tiny event bus for the route curtain
   utils.ts               cn(), skuVars(), reducedMotion(), colour helpers
+  crunch.ts              the crunch language: burstAt (crumbs into one fixed layer), shake, crunchLite, playCrack (the Snap centrepiece), CRACK geometry shared by the SVG path and clip-path halves
 public/
   brand/                 logo.png (colour), logo-forest/cream/black.png (mask tints)
   products/              <slug>.png — supplied transparent cut-outs, untouched artwork
