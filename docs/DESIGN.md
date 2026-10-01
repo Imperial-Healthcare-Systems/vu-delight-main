@@ -29,7 +29,10 @@ The page takes on the SKU colour via CSS vars `--sku`, `--sku-ink`, `--sku-soft`
 
 - Display: **Fraunces** (variable, optical size + SOFT axis), regular weight, upright. No italics anywhere.
 - Body / UI: **DM Sans**. Uppercase tracked text only inside stickers and marquees, never as a label above a heading.
-- Scale (clamp): `t-display` 12vw→13rem · `t-h1` 2.8–6.5rem · `t-h2` 2.1–4.4rem · `t-h3` 1.4–2rem · body 1rem/1.6.
+- Scale (clamp): `t-display` 13.5vw, 3.6–11rem · `t-h1` 6.5vw, 2.4–5.5rem · `t-h2` 4.4vw, 1.85–3.75rem · `t-h3` 1.4–2rem · body 1rem/1.6.
+- **Large screens**: the design is tuned at 1440. Content sits in a 90rem column, and everything that scales with
+  viewport width is capped (rail cards 300px, oval tiles 280px, orbit packs 130px, hero word 8rem) so a 1920
+  monitor shows more of the page rather than a zoomed-in version of it.
 - **Emphasis device: the highlighter swash** (`components/ui/Hi.tsx`). A hand-drawn marker stroke sits behind the
   emphasised word(s) and draws itself when it scrolls into view. Colours: tangerine (default), pink on dark, lime on pink.
   This replaced the "one italic word per heading" habit and the eyebrow → heading → subtext template.

@@ -93,7 +93,7 @@ export function Hero() {
     };
   });
 
-  const display = "t-display text-[clamp(3.2rem,13vw,5rem)] md:text-[min(10vw,13vh)]";
+  const display = "t-display text-[clamp(3.2rem,13vw,5rem)] md:text-[min(10vw,13vh,8rem)]";
 
   return (
     <section ref={ref} className="sticky top-0 z-0 flex min-h-[100svh] flex-col overflow-hidden pt-[var(--header-h)]" aria-labelledby="hero-title">
@@ -104,14 +104,14 @@ export function Hero() {
 
       <div className="container-x relative flex flex-1 flex-col">
         <div className="relative flex min-h-[52svh] flex-1 items-center justify-center md:min-h-0">
-          <div data-orbit className="pointer-events-none absolute left-1/2 top-[54%] h-[34vh] w-[100vw] max-w-[104rem] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] md:top-[52%] md:h-[72vh] md:w-[110vw]" aria-hidden>
+          <div data-orbit className="pointer-events-none absolute left-1/2 top-[54%] h-[34vh] w-[100vw] max-w-[96rem] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] md:top-[52%] md:h-[72vh] md:w-[110vw]" aria-hidden>
             {packs.map((p, i) => {
               const a = -Math.PI / 2 + (i / packs.length) * Math.PI * 2;
               return (
                 <div
                   key={p.slug}
                   data-pack
-                  className="absolute w-[9.5vw] min-w-[72px] max-w-[150px] -translate-x-1/2 -translate-y-1/2 will-change-transform md:min-w-[80px]"
+                  className="absolute w-[9.5vw] min-w-[72px] max-w-[130px] -translate-x-1/2 -translate-y-1/2 will-change-transform md:min-w-[80px]"
                   style={{ ...skuVars(p.accent, p.ink, p.soft), left: `${50 + Math.cos(a) * 50}%`, top: `${50 + Math.sin(a) * 50}%` }}
                 >
                   <Image src={p.image} alt="" width={150} height={240} priority className="pack-shadow w-full" />

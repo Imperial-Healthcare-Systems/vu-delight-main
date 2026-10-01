@@ -115,11 +115,12 @@
     width: 100%;
     padding-inline: var(--gutter);
     margin-inline: auto;
-    max-width: 96rem;
+    /* 1440px: on a 1920 monitor the content sits in a centred column instead of stretching to the edges */
+    max-width: 90rem;
   }
   .t-display {
     font-family: var(--font-display);
-    font-size: clamp(3.6rem, 13.5vw, 13rem);
+    font-size: clamp(3.6rem, 13.5vw, 11rem);
     line-height: 0.86;
     letter-spacing: -0.035em;
     font-weight: 600;
@@ -127,11 +128,11 @@
   }
   .t-h1 {
     /* the floor only bites below ~690px: phones get a heading that fits, desktop is unchanged */
-    font-size: clamp(2.4rem, 6.5vw, 6.5rem);
+    font-size: clamp(2.4rem, 6.5vw, 5.5rem);
     line-height: 0.92;
   }
   .t-h2 {
-    font-size: clamp(1.85rem, 4.4vw, 4.4rem);
+    font-size: clamp(1.85rem, 4.4vw, 3.75rem);
     line-height: 0.95;
   }
   .t-h3 {
@@ -151,7 +152,7 @@
     font-weight: 600;
   }
   .t-lead {
-    font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
     line-height: 1.45;
   }
   .stroke {

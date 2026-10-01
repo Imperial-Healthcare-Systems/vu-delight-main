@@ -84,7 +84,7 @@ export function StrokeMarquee() {
                       onPointerEnter={(e) => hover(w, e.currentTarget, ri)}
                       onFocus={(e) => hover(w, e.currentTarget, ri)}
                       className={cn(
-                        "stroke whitespace-nowrap px-[0.3em] font-display text-[clamp(2.6rem,8vw,7.5rem)] leading-[1.05] tracking-[-0.03em] transition-[color,-webkit-text-fill-color,transform] duration-300",
+                        "stroke whitespace-nowrap px-[0.3em] font-display text-[clamp(2.6rem,8vw,6.5rem)] leading-[1.05] tracking-[-0.03em] transition-[color,-webkit-text-fill-color,transform] duration-300",
                         on ? "stroke-fill scale-[1.04] text-[var(--sku)]" : "text-cream/80 hover:text-cream",
                       )}
                     >

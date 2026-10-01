@@ -120,7 +120,7 @@ function Block({ c, i }: { c: Category; i: number }) {
             className="conveyor"
           >
             {list.map((p) => (
-              <SwiperSlide key={p.slug} className="!w-[62vw] sm:!w-[40vw] md:!w-[28vw] lg:!w-[21vw]">
+              <SwiperSlide key={p.slug} className="!w-[62vw] sm:!w-[40vw] md:!w-[min(28vw,300px)] lg:!w-[min(21vw,280px)]">
                 <ProductCard p={p} />
               </SwiperSlide>
             ))}
