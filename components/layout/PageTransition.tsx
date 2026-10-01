@@ -1,22 +1,30 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { ensureGsap } from "@/lib/gsap";
 import { setCoverPage, transition } from "@/lib/transition";
+import { scrollTo } from "@/lib/lenis";
 import { reducedMotion } from "@/lib/utils";
 import { Logo } from "@/components/ui/Logo";
 
 const N = 9;
+/** If a navigation never lands (network, error page), the curtain lets go after this long. */
+const FAILSAFE_MS = 6000;
 
 /**
  * Route curtain, "threads": nine thin forest strings draw in from the top and bottom edges (alternating),
  * then each thread widens into a bar until the page is covered. The mark breathes in, the new page mounts
  * underneath, the bars narrow back to threads and the threads retract towards the opposite edge.
- * One colour, no seam, no accent line. Hidden by CSS before hydration; plays only after a TransitionLink
- * covered the page.
+ *
+ * The curtain lifts when the pathname actually changes (not when a template remounts, which never happens
+ * for a navigation inside the same dynamic route, e.g. one collection to another). A fail-safe timer lifts
+ * it regardless, so the page can never stay covered. Hidden by CSS before hydration.
  */
 export function PageTransition() {
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const coveredRef = useRef(false);
 
   useEffect(() => {
     const el = ref.current!;
@@ -25,6 +33,7 @@ export function PageTransition() {
     const mark = el.querySelector<HTMLElement>("[data-mark]")!;
     const { gsap } = ensureGsap();
     const rm = reducedMotion();
+    let failsafe: ReturnType<typeof setTimeout> | undefined;
 
     const park = () => {
       threads.forEach((t, i) => gsap.set(t, { scaleY: 0, transformOrigin: i % 2 ? "50% 100%" : "50% 0%" }));
@@ -32,12 +41,33 @@ export function PageTransition() {
       gsap.set(mark, { opacity: 0, scale: 0.92 });
     };
     park();
-    let covered = false;
+
+    const reveal = () => {
+      if (!coveredRef.current) return;
+      coveredRef.current = false;
+      if (failsafe) clearTimeout(failsafe);
+      const done = () => {
+        park();
+        gsap.set(el, { pointerEvents: "none" });
+        // a hash on the landed URL: take the reader there once the page is visible
+        if (window.location.hash) scrollTo(window.location.hash, -96);
+      };
+      if (rm) return done();
+      // threads leave towards the edge they did not come from
+      threads.forEach((t, i) => gsap.set(t, { transformOrigin: i % 2 ? "50% 0%" : "50% 100%" }));
+      gsap
+        .timeline({ onComplete: done })
+        .to(mark, { opacity: 0, scale: 1.04, duration: 0.18, ease: "power2.in" })
+        .to(fills, { scaleX: 0, duration: 0.4, ease: "power3.inOut", stagger: { each: 0.02, from: "edges" } }, "-=0.08")
+        .to(threads, { scaleY: 0, duration: 0.32, ease: "expo.in", stagger: { each: 0.02, from: "edges" } }, "-=0.22");
+    };
 
     setCoverPage(
       () =>
         new Promise<void>((res) => {
-          covered = true;
+          coveredRef.current = true;
+          if (failsafe) clearTimeout(failsafe);
+          failsafe = setTimeout(reveal, FAILSAFE_MS);
           gsap.set(el, { pointerEvents: "auto" });
           if (rm) {
             gsap.set(fills, { scaleX: 1 });
@@ -51,24 +81,19 @@ export function PageTransition() {
         }),
     );
 
-    const off = transition.on((phase) => {
-      if (phase !== "in" || !covered) return;
-      covered = false;
-      const done = () => {
-        park();
-        gsap.set(el, { pointerEvents: "none" });
-      };
-      if (rm) return done();
-      // threads leave towards the edge they did not come from
-      threads.forEach((t, i) => gsap.set(t, { transformOrigin: i % 2 ? "50% 0%" : "50% 100%" }));
-      gsap
-        .timeline({ onComplete: done })
-        .to(mark, { opacity: 0, scale: 1.04, duration: 0.18, ease: "power2.in" })
-        .to(fills, { scaleX: 0, duration: 0.4, ease: "power3.inOut", stagger: { each: 0.02, from: "edges" } }, "-=0.08")
-        .to(threads, { scaleY: 0, duration: 0.32, ease: "expo.in", stagger: { each: 0.02, from: "edges" } }, "-=0.22");
-    });
-    return off;
+    const off = transition.on((phase) => phase === "in" && reveal());
+    return () => {
+      off();
+      if (failsafe) clearTimeout(failsafe);
+    };
   }, []);
+
+  // the navigation landed: lift the curtain on the next frame, once the new page has painted
+  useEffect(() => {
+    if (!coveredRef.current) return;
+    const id = requestAnimationFrame(() => transition.emit("in"));
+    return () => cancelAnimationFrame(id);
+  }, [pathname]);
 
   return (
     <div ref={ref} data-curtain className="pointer-events-none fixed inset-0 z-[90]" aria-hidden>

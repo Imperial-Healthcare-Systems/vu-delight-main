@@ -9,7 +9,6 @@ will talk to a backend is isolated in `content/` and `lib/store.ts`.
 app/                     routes only — no business logic
   layout.tsx             fonts, Preloader, PageTransition, SmoothScroll, ScrollProgress, ParallaxLayers, Header, Footer,
                          CartDrawer, SearchOverlay, WelcomeModal, CursorDot
-  template.tsx           per-navigation page entrance (curtain out)
   page.tsx               home: sticky Hero + SectionShells (shelves, stroke marquee, manifesto, method, rail, inside/out, bundles, reviews, club)
   shop/page.tsx          all products, filterable by category and tag
   products/[slug]/       product detail (SKU colour takeover, 2.5D gallery, buy box)
@@ -97,7 +96,10 @@ Nothing else knows about data origin.
 - **Parallax**: `ParallaxLayers` scans `[data-speed]` per route and scrubs each element ±(speed−1)·200px.
 - **Page transition** (`PageTransition`, "threads"): nine thin strings draw in from the top and bottom edges, widen into bars
   to cover, then reverse; single colour, no seam. Hidden by CSS before hydration and only played after a `TransitionLink`
-  covered the page (no sweep on fresh loads). `template.tsx` remounts per route.
+  covered the page (no sweep on fresh loads). The curtain lifts when `usePathname()` changes, **not** on a template remount:
+  a root `template.tsx` never remounts for a navigation inside the same dynamic route (collection → collection, product →
+  product), which left the page covered until a refresh. A 6s fail-safe lifts it regardless. `TransitionLink` treats a
+  same-page anchor (`/story#compare` while on `/story`) as a smooth scroll with no curtain.
 - The first `SectionShell` after the hero uses `overlap={false}` so it never covers the hero CTA row.
 - Hero is `sticky top-0`; the shells are `relative z-10+`. The footer is sticky-revealed on `lg` only.
 

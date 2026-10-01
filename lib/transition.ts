@@ -2,7 +2,7 @@
 
 /**
  * Tiny event bus for the route curtain.
- * TransitionLink -> "out" (curtain covers) -> router.push -> template mounts -> "in" (curtain leaves).
+ * TransitionLink -> coverPage() -> router.push -> PageTransition sees the pathname change -> "in" (curtain leaves).
  */
 type Fn = () => void;
 const listeners = new Set<(phase: "out" | "in") => void>();
