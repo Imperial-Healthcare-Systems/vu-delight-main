@@ -28,6 +28,7 @@ const WORD = "t-display stroke block font-display text-[24vw] text-cream md:text
  */
 export function FreezeStory() {
   const [dot, setDot] = useState(0);
+  const [swiped, setSwiped] = useState(false);
 
   const ref = useGsap<HTMLElement>(({ gsap, ScrollTrigger, root, reduced }) => {
     const inner = root.firstElementChild as HTMLElement;
@@ -115,6 +116,7 @@ export function FreezeStory() {
       const down = () => {
         hold = true;
         stop();
+        setSwiped(true);
       };
       const up = () => {
         hold = false;
@@ -163,7 +165,8 @@ export function FreezeStory() {
 
         <div
           data-track
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden px-[var(--gutter)] pb-2 scrollbar-none md:w-max md:snap-none md:gap-[6vw] md:overflow-visible md:pb-0 md:motion-reduce:w-auto md:motion-reduce:flex-col"
+          data-lenis-prevent
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden px-[var(--gutter)] pb-2 scrollbar-none [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain] [touch-action:pan-x_pan-y] md:w-max md:snap-none md:gap-[6vw] md:overflow-visible md:pb-0 md:motion-reduce:w-auto md:motion-reduce:flex-col"
         >
           {site.freeze.beats.map((b, i) => (
             <article key={b.n} data-beat data-card className="relative flex w-[84vw] max-w-[760px] shrink-0 snap-center flex-col gap-5 md:w-[60vw] md:flex-row md:items-center md:gap-8">
@@ -209,8 +212,11 @@ export function FreezeStory() {
           </div>
         </div>
 
-        {/* mobile dots */}
-        <div className="mt-2 flex justify-center md:hidden" role="tablist" aria-label="Story steps">
+        {/* mobile dots + a swipe hint that leaves after the first drag */}
+        <div className="relative mt-2 flex items-center justify-center md:hidden" role="tablist" aria-label="Story steps">
+          <span data-hint className={cn("pointer-events-none absolute right-[var(--gutter)] flex items-center gap-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-cream/70 transition-opacity duration-500", swiped && "opacity-0")} aria-hidden>
+            Swipe <span className="inline-block animate-[nudge_1.2s_ease-in-out_infinite]">→</span>
+          </span>
           {[...site.freeze.beats, { n: "snap" }].map((b, i) => (
             <button key={b.n} role="tab" aria-selected={dot === i} aria-label={`Step ${i + 1}`} onClick={() => go(i)} className="grid h-8 min-w-8 place-items-center px-1">
               <span className={cn("block h-2.5 rounded-full transition-[width,background-color] duration-300", dot === i ? "w-6 bg-tangerine" : "w-2.5 bg-cream/30")} />
