@@ -14,7 +14,8 @@ import { useGsap } from "@/lib/gsap";
 
 /**
  * Nutraj "Explore the World of Exotic Nuts": an inset dark panel with two slow colour glows (the first and
- * last featured pack's accents), a stroke watermark and grain; white cards on an infinite conveyor clipped
+ * last featured pack's accents), a stroke watermark and grain; white cards (three copies of the six featured
+ * packs, so the loop never runs short of slides) on an infinite conveyor clipped
  * inside the panel so nothing spills onto the cream. Arrows on md+, swipe on touch. Card width is capped so
  * the rail reads the same on a 1440 laptop and a 1920 monitor. On phones the panel is full-bleed.
  */
@@ -22,6 +23,8 @@ export function ProductRail() {
   const swiper = useRef<SwiperType | null>(null);
   const lead = featured[0];
   const tail = featured[featured.length - 1];
+  // three copies: Swiper quietly disables looping when the slides barely fill a wide panel (6 × 300px ≈ 1900px)
+  const slides = [...featured, ...featured, ...featured];
 
   const ref = useGsap<HTMLElement>(({ gsap, ScrollTrigger, root, reduced }) => {
     gsap.to(root.querySelectorAll("[data-glow]"), { xPercent: 14, yPercent: -12, duration: reduced ? 18 : 9, yoyo: true, repeat: -1, ease: "sine.inOut", stagger: 2 });
@@ -74,14 +77,15 @@ export function ProductRail() {
               slidesPerView="auto"
               spaceBetween={20}
               loop
+              loopAdditionalSlides={3}
               speed={6000}
               autoplay={{ delay: 0, disableOnInteraction: false, pauseOnMouseEnter: true }}
               grabCursor
               breakpoints={{ 768: { spaceBetween: 24 } }}
               className="conveyor"
             >
-              {featured.map((p) => (
-                <SwiperSlide key={p.slug} className="!w-[70vw] sm:!w-[42vw] md:!w-[min(30vw,300px)]">
+              {slides.map((p, i) => (
+                <SwiperSlide key={`${p.slug}-${i}`} className="!w-[70vw] sm:!w-[42vw] md:!w-[min(30vw,300px)]">
                   <div data-item className="h-full">
                     <ProductCard p={p} skin="card" className="h-full" />
                   </div>
